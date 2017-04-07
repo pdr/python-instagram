@@ -101,7 +101,7 @@ class OAuth2AuthExchangeRequest(object):
         return self._url_for_authorize(scope=scope)
 
     def get_authorize_login_url(self, scope=None):
-        http_object = Http(timeout=self.api.timeout, disable_ssl_certificate_validation=True)
+        http_object = Http(timeout=self.api.timeout, disable_ssl_certificate_validation=False)
 
         url = self._url_for_authorize(scope=scope)
         response, content = http_object.request(url)
@@ -113,7 +113,7 @@ class OAuth2AuthExchangeRequest(object):
 
     def exchange_for_access_token(self, code=None, username=None, password=None, scope=None, user_id=None):
         data = self._data_for_exchange(code, username, password, scope=scope, user_id=user_id)
-        http_object = Http(timeout=self.api.timeout, disable_ssl_certificate_validation=True)
+        http_object = Http(timeout=self.api.timeout, disable_ssl_certificate_validation=False)
         url = self.api.access_token_url
 
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
@@ -248,8 +248,8 @@ class OAuth2Request(object):
         # https://github.com/jcgregorio/httplib2/issues/173
         # bug in httplib2 w/ Python 3 and disable_ssl_certificate_validation=True
         if six.PY3:
-            http_obj = Http(timeout=self.api.timeout) 
+            http_obj = Http(timeout=self.api.timeout)
         else:
-            http_obj = Http(timeout=self.api.timeout, disable_ssl_certificate_validation=True)
+            http_obj = Http(timeout=self.api.timeout, disable_ssl_certificate_validation=False)
 
         return http_obj.request(url, method, body=body, headers=headers)
